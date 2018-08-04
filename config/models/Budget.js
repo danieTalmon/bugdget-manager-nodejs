@@ -10,7 +10,6 @@ var Budget = mongoose.model('Budget', {
   catId: {
     type: String,
     required: true,
-    index:true,
     minlength: 1,
     trim: true
   },
@@ -22,7 +21,6 @@ var Budget = mongoose.model('Budget', {
   estimateTime:{
     type: String,
     enum: ["mounthly","yearly"],
-    required:true,
     default: "mounthly"
 }
 });

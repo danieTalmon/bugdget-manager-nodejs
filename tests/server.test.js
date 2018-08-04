@@ -4,37 +4,40 @@ const {ObjectID} = require('mongodb');
 
 const {app} = require('./../index');
 const {Budget} = require('./../config/models/Budget');
+const {Categories} = require('./../config/models/Categories');
+const {SubCategories} = require('./../config/models/SubCategories');
+const {Current} = require('./../config/models/Current');
 const {User} = require('./../config/models/Users');
-const {budgets, populateBudgets, users, populateUsers} = require('./seed/seed');
+const {budgets,categories,subCategories,current,
+   populateBudgets, users, populateUsers,populateCategories,populateSubCategories
+   ,populateCurrent} = require('./seed/seed');
 
 beforeEach(populateUsers);
 beforeEach(populateBudgets);
+beforeEach(populateCategories);
 
 describe('POST /budgets', () => {
   it('should create a new budget', (done) => {
-    var budget = {subCatId: "6",
+    var doc = {subCatId: "6",
         catId:"7",
         budget:300};
 
+
     request(app)
       .post('/budgets')
-      .send(budget)
+      .send(doc)
       .expect(200)
       .expect((res) => {
-        expect(res.body.catId).toBe(budget.catId);
+        expect(res.body.catId).toBe(doc.catId);
+        expect(res.body.budget).toBe(doc.budget);
+        done();
       })
       .end((err, res) => {
         if (err) {
           return done(err);
         }
-
-        Budget.find(budget).then((budgets) => {
-          expect(budgets.length).toBe(1);
-          expect(budgets[0].catId).toBe(budget.catId);
-          done();
-        }).catch((e) => done(e));
+      })
       });
-  });
 
   it('should not create budget with invalid body data', (done) => {
     request(app)
@@ -45,14 +48,30 @@ describe('POST /budgets', () => {
         if (err) {
           return done(err);
         }
+      })
 
         Budget.find().then((budgets) => {
           expect(budgets.length).toBe(2);
           done();
         }).catch((e) => done(e));
       });
+      it('should update some budget', (done) => {
+        var _id = budgets[1]._id;
+        request(app)
+          .put('/budgets')
+          .send({query:{_id},data:{budget:900}})
+          .expect(200)
+          .expect((res) => {
+            expect(res.body._id).toBe(_id);
+          })
+
+            Budget.find().then((budgets) => {
+              expect(budgets.length).toBe(2);
+              done()
+            }).catch((e) => done(e))
+          });
   });
-});
+
 
 describe('GET /budgets', () => {
   it('should get all budgets', (done) => {
@@ -60,12 +79,189 @@ describe('GET /budgets', () => {
       .get('/budgets')
       .expect(200)
       .expect((res) => {
-        expect(res.body.budgets.length).toBe(2);
+        expect(res.body.docs.length).toBe(2);
       })
-      .end(done);
+      .end(done)
   });
 });
 
+
+describe('POST /Categories', () => {
+  it('should create a new category', (done) => {
+    var doc = {
+      _id: new ObjectID(),
+        name: "Jewdism",
+      catId: "8",
+      _creator:"root"
+    };
+
+
+    request(app)
+      .post('/categories')
+      .send(doc)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.CatId).toBe(doc.CatId);
+        expect(res.body.name).toBe(doc.name);
+        done();
+      })
+      .end((err, res) => {
+        if (err) {
+          return done(err);
+        }
+      })
+      });
+
+  it('should not create category with invalid body data', (done) => {
+    request(app)
+      .post('/categories')
+      .send({})
+      .expect(400)
+      .end((err, res) => {
+        if (err) {
+          return done(err);
+        }
+      })
+
+        Categories.find().then((docs) => {
+          expect(docs.length).toBe(2);
+          done();
+        }).catch((e) => done(e));
+      });
+      it('should update some category', (done) => {
+        var _id = categories[1]._id;
+        request(app)
+          .put('/categories')
+          .send({query:{_id},data:{name:'House'}})
+          .expect(200)
+          .expect((res) => {
+            expect(res.body._id).toBe(_id);
+          })
+
+            Categories.find().then((docs) => {
+              expect(docs.length).toBe(2);
+              done()
+            }).catch((e) => done(e))
+          });
+  });
+
+
+describe('GET /Categories', () => {
+  it('should get all categories', (done) => {
+    request(app)
+      .get('/categories')
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.docs.length).toBe(2);
+      })
+      .end(done)
+  });
+});
+
+beforeEach(populateSubCategories);
+
+describe('POST /subCategories', () => {
+  it('should create a new category', (done) => {
+    var doc = {
+      _id: new ObjectID(),
+      name:"mekva",
+      catId: "3",
+      subCatId: "8",
+      type:0,
+      _creator:"root"
+    };
+
+
+    request(app)
+      .post('/subCategories')
+      .send(doc)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.CatId).toBe(doc.CatId);
+        expect(res.body.name).toBe(doc.name);
+        done();
+      })
+      .end((err, res) => {
+        if (err) {
+          return done(err);
+        }
+      })
+      });
+
+  it('should not create category with invalid body data', (done) => {
+    request(app)
+      .post('/subCategories')
+      .send({})
+      .expect(400)
+      .end((err, res) => {
+        if (err) {
+          return done(err);
+        }
+      })
+
+        SubCategories.find().then((docs) => {
+          expect(docs.length).toBe(2);
+          done();
+        }).catch((e) => done(e));
+      });
+      it('should update some category', (done) => {
+        var _id = categories[1]._id;
+        request(app)
+          .put('/subCategories')
+          .send({query:{_id},data:{name:'Food for Home'}})
+          .expect(200)
+          .expect((res) => {
+            expect(res.body._id).toBe(_id);
+          })
+
+            SubCategories.find().then((docs) => {
+              expect(docs.length).toBe(2);
+              done()
+            }).catch((e) => done(e))
+          });
+  });
+
+
+describe('GET /subCategories', () => {
+  it('should get all categories', (done) => {
+    request(app)
+      .get('/subCategories')
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.docs.length).toBe(2);
+      })
+      .end(done)
+  });
+});
+
+describe('POST /current', () => {
+  it('should create a new current', (done) => {
+    var doc = {
+	_id : new ObjectID(),
+	catId:"3",
+	subCatId:"2",
+  description:"a112",
+  amount:12,
+  createdAt:1531946840370
+    };
+	
+	request(app)
+      .post('/current')
+      .send(doc)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.CatId).toBe(doc.CatId);
+        expect(res.body.amount).toBe(doc.amount);
+        done();
+      })
+      .end((err, res) => {
+        if (err) {
+          return done(err);
+        }
+      })
+      });
+});
+	
 // describe('GET /todos/:id', () => {
 //   it('should return todo doc', (done) => {
 //     request(app)

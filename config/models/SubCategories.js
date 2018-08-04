@@ -7,20 +7,13 @@ var SubCategories = mongoose.model('SubCategories', {
     minlength: 1,
     trim: true
   },
-  description: {
+  catId:{
     type: String,
     required: true,
-    minlength: 1,
-    trim: true
-  },
-  catId:{
-    type: Number,
-    required: true,
-    unique:true,
     default: 0
   },
-  subCatCode:{
-    type: Number,
+  subCatId:{
+    type: String,
     unique:true,
     required: true,
     default: null

@@ -7,18 +7,14 @@ var Categories = mongoose.model('Categories', {
     minlength: 1,
     trim: true
   },
-  CatId:{
+  catId:{
     type: String,
     unique:true,
     default: "0"
   },
-  type: {
-    type: Number,
-    enum:[0,1],
-    default: 0
-  },
   _creator:{
-    type: String
+    type: String,
+    default:"root"
   }
 });
 

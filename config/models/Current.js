@@ -7,10 +7,14 @@ var Current = mongoose.model('Current', {
     minlength: 1,
     trim: true
   },
-  subCatID: {
+  subCatId: {
     type: String,
     minlength: 1,
     trim: true
+  },
+  description:{
+    type:String,
+    default:""
   },
   amount:{
     type: Number,
@@ -19,6 +23,7 @@ var Current = mongoose.model('Current', {
   },
   createdAt:{
     type: Number,
+	default : Date.now(),
     required:true
 }
 });
