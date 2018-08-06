@@ -1,8 +1,9 @@
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
 var Current = mongoose.model('Current', {
   catId: {
-    type: String,
+    type: Schema.Types.Mixed,
     required: true,
     minlength: 1,
     trim: true
@@ -22,7 +23,7 @@ var Current = mongoose.model('Current', {
     default: 0
   },
   createdAt:{
-    type: Number,
+    type: Schema.Types.Mixed,
 	default : Date.now(),
     required:true
 }

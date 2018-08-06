@@ -1,8 +1,8 @@
 var mongoose = require('mongoose');
 const express = require('express');
 const _ = require('lodash');
-var {Categories} = require('./config/models/Categories');
-var {SubCategories} = require('./config/models/SubCategories');
+var {Categories} = require('../config/models/Categories');
+var {SubCategories} = require('../config/models/SubCategories');
 const moment = require('moment')
 const modelWithDate = ['Budget','Current'];
 
@@ -16,11 +16,12 @@ var saveInTheDB = (model,data,res) => {
 
 };
 
-var changeTheTime = (docs,format) => {
-  for doc in docs {
-    date = doc['createdAt'];
+var changeTheTime =  (docs,format) => {
+  for (var i=0;i<docs.length;i++) {
     try{
-    doc['createdAt'] = date.format(format);
+    var date = moment(docs[i]['createdAt']);
+    docs[i].createdAt = date.format(format);
+  }
    catch(error){
      console.log(error);
      break;
@@ -28,22 +29,24 @@ var changeTheTime = (docs,format) => {
   }
 };
 
-var changeThecategory = (docs) => {
-  Categories.find().then((cats)=>{
-    for doc in docs {
-      category = _.find(cats,(cat) =>cat.catId == doc.catId );
-      doc['catId'] = category.name;
-    }
-  });
-}
+var changeThecategory =async function (docs) {
+  let cats
+  var docsOfCat = await Categories.find().then(cats);
+  for (var i=0;i<docs.length;i++) {
+    var category = _.find(docsOfCat,(cat) =>cat.catId == docs[i]['catId'] );
+    docs[i].catId = category.name;
+    docs[i].subCatId = '9';
+  }
+};
 
 var getFromTheDB = (model,res) => {
 
   model.find().then((docs) => {
-    modelName = doc.modelName();
-  if(modelName == 'Current' or modelName == 'Budget'){
+    modelName = model['modelName'];
+  if(modelWithDate.indexOf(modelName)!=-1){
     changeTheTime(docs,"MMMM Do YYYY");
-    changeThecategory(docs,)
+    changeThecategory(docs);
+    console.log(docs);
   }
   res.send({docs});
   }, (e) => {
