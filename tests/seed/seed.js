@@ -25,13 +25,13 @@ const users = [{
 
 const budgets = [{
   _id: new ObjectID(),
-  subCatId: "10",
-  catId: "5",
+  subCategory:{id: "10", name : "BL"},
+  category:{id :"5", name: "Incoming"},
   budget:300
 }, {
   _id: new ObjectID(),
-    subCatId: "4",
-  catId: "5",
+  subCategory:{id: "4", name : "Salary"},
+  category:{id :"9", name: "Incoming"},
   budget:400
 }];
 
@@ -61,15 +61,15 @@ const subCategories = [{
 }];
 const current = [{
   _id: new ObjectID(),
-  catId:"6",
-  subCatId: "1",
+  subCategory:{id: "6", name : "Food for Home"},
+  category:{id :"1", name: "Food"},
   description:"shabat",
   amount:100,
   createdAt:new Date().valueOf()
 }, {
   _id: new ObjectID(),
-  catId:"6",
-  subCatId: "1",
+  subCategory:{id: "10", name : "Food for Home"},
+  category:{id :"6", name: "Junk"},
   description:"coffe",
   amount:10,
   createdAt:new Date().valueOf()

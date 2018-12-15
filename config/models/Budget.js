@@ -1,17 +1,31 @@
 var mongoose = require('mongoose');
 
 var Budget = mongoose.model('Budget', {
-    subCatId: {
+  subCategory : {
+    id: {
         type: String,
-        unique:true,
+        required : true,
         minlength: 1,
         trim: true
     },
-  catId: {
-    type: String,
-    required: true,
-    minlength: 1,
-    trim: true
+    name : {
+      type: String,
+      required : true,
+      minlength: 1
+    }
+  },
+  category: {
+    id: {
+        type: String,
+        required : true,
+        minlength: 1,
+        trim: true
+    },
+    name : {
+      type: String,
+      required : true,
+      minlength: 1
+    }
   },
   budget:{
     type: Number,

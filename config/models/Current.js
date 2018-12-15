@@ -2,16 +2,27 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var Current = mongoose.model('Current', {
-  catId: {
-    type: Schema.Types.Mixed,
-    required: true,
-    minlength: 1,
-    trim: true
+  subCategory : {
+    id: {
+        type: String,
+        minlength: 1,
+        trim: true
+    },
+    name : {
+      type: String,
+      minlength: 1
+    }
   },
-  subCatId: {
-    type: String,
-    minlength: 1,
-    trim: true
+  category: {
+    id: {
+        type: String,
+        minlength: 1,
+        trim: true
+    },
+    name : {
+      type: String,
+      minlength: 1
+    }
   },
   description:{
     type:String,

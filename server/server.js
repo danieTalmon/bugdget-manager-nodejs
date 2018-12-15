@@ -29,14 +29,16 @@ var changeTheTime =  (docs,format) => {
   }
 };
 
-var changeThecategory =async function (docs) {
+var changeThecategory =function (docs) {
   let cats
-  var docsOfCat = await Categories.find().then(cats);
-  for (var i=0;i<docs.length;i++) {
-    var category = _.find(docsOfCat,(cat) =>cat.catId == docs[i]['catId'] );
-    docs[i].catId = category.name;
-    docs[i].subCatId = '9';
-  }
+  var docsOfCat = Categories.find({},
+  function(cats){
+    for (var i=0;i<docs.length;i++) {
+      var category = _.find(docsOfCat,(cat) =>cat.catId == docs[i]['catId'] );
+      docs[i].catId = category.name;
+    }
+    console.log(docs);
+  });
 };
 
 var getFromTheDB = (model,res) => {
@@ -46,7 +48,7 @@ var getFromTheDB = (model,res) => {
   if(modelWithDate.indexOf(modelName)!=-1){
     changeTheTime(docs,"MMMM Do YYYY");
     changeThecategory(docs);
-    console.log(docs);
+
   }
   res.send({docs});
   }, (e) => {

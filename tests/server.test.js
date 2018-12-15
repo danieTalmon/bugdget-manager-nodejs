@@ -9,8 +9,9 @@ const {SubCategories} = require('./../config/models/SubCategories');
 const {Current} = require('./../config/models/Current');
 const {User} = require('./../config/models/Users');
 const {budgets,categories,subCategories,current,
-   populateBudgets, users, populateUsers,populateCategories,populateSubCategories
-   ,populateCurrent} = require('./seed/seed');
+   populateBudgets, users, populateUsers,populateCategories,populateSubCategories}
+   = require('./seed/seed');
+  const {populateCurrent} = require('./seed/seed');
 
 beforeEach(populateUsers);
 beforeEach(populateBudgets);
@@ -18,8 +19,8 @@ beforeEach(populateCategories);
 
 describe('POST /budgets', () => {
   it('should create a new budget', (done) => {
-    var doc = {subCatId: "6",
-        catId:"7",
+    var doc = {  subCategory:{id: "15", name : "Yerusha"},
+      category:{id :"3", name: "Incoming"},
         budget:300};
 
 
@@ -28,7 +29,7 @@ describe('POST /budgets', () => {
       .send(doc)
       .expect(200)
       .expect((res) => {
-        expect(res.body.catId).toBe(doc.catId);
+        expect(res.body.category.id).toBe(doc.category.id);
         expect(res.body.budget).toBe(doc.budget);
         done();
       })
@@ -234,23 +235,24 @@ describe('GET /subCategories', () => {
   });
 });
 
+beforeEach(populateCurrent);
+
 describe('POST /current', () => {
   it('should create a new current', (done) => {
     var doc = {
 	_id : new ObjectID(),
-	catId:"3",
-	subCatId:"2",
+  subCategory: {id: "9", name : "test"},
+  category: {id :"1", name: "subTest"},
   description:"a112",
-  amount:12,
-  createdAt:1531946840370
+  amount:12
     };
-	
+
 	request(app)
       .post('/current')
       .send(doc)
       .expect(200)
       .expect((res) => {
-        expect(res.body.CatId).toBe(doc.CatId);
+        expect(res.body.category.id).toBe(doc.category.id);
         expect(res.body.amount).toBe(doc.amount);
         done();
       })
@@ -261,7 +263,7 @@ describe('POST /current', () => {
       })
       });
 });
-	
+
 // describe('GET /todos/:id', () => {
 //   it('should return todo doc', (done) => {
 //     request(app)
